@@ -16,9 +16,19 @@ public class Investigador {
         this.experimentos = new ArrayList<>();
     }
 
-    /** Asocia el investigador a un experimento existente. */
     public void asociarExperimento(Experimento experimento) {
-        // TODO: implementar
+        if (experimento != null) {
+            boolean yaExiste = false;
+            for (Experimento exp : this.experimentos) {
+                if (exp.getId().equals(experimento.getId())) {
+                    yaExiste = true;
+                    break;
+                }
+            }
+            if (!yaExiste) {
+                this.experimentos.add(experimento);
+            }
+        }
     }
 
     public String getNombre() { return nombre; }

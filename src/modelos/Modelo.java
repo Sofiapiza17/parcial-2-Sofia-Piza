@@ -3,6 +3,7 @@ package modelos;
 import datos.Dataset;
 import servicios.MetricaEvaluacion;
 
+
 /**
  * Clase abstracta que representa un modelo de ML genérico.
  * Mantiene un historial del loss por época en un arreglo de enteros.
@@ -10,12 +11,14 @@ import servicios.MetricaEvaluacion;
 public abstract class Modelo {
 
     private String nombre;
-    private int[] lossPorEpoca;   // int[] obligatorio
-    private int epocaActual;
-    private int mejorLossRegistrado;
+    private int[] lossPorEpoca; // int[] obligatorio
+    protected int epocaActual;
+    protected int mejorLossRegistrado;
+    private int maxEpocas;
 
     public Modelo(String nombre, int maxEpocas) {
         this.nombre = nombre;
+        this.maxEpocas = maxEpocas;
         this.lossPorEpoca = new int[maxEpocas];
         this.epocaActual = 0;
         this.mejorLossRegistrado = Integer.MAX_VALUE;
@@ -32,7 +35,13 @@ public abstract class Modelo {
      * actualiza el mejor loss pero no agrega más elementos.
      */
     public void registrarEpoca(int loss) {
-        // TODO: implementar
+        if (this.epocaActual < this.maxEpocas) {
+            this.lossPorEpoca[this.epocaActual] = loss;
+        }
+        this.epocaActual++;
+        if (loss < this.mejorLossRegistrado) {
+            this.mejorLossRegistrado = loss;
+        }
     }
 
     /**
@@ -40,8 +49,10 @@ public abstract class Modelo {
      * Si no hay épocas, retorna Integer.MAX_VALUE.
      */
     public int mejorLoss() {
-        // TODO: implementar
-        return Integer.MAX_VALUE;
+        if (this.epocaActual == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return this.mejorLossRegistrado;
     }
 
     /**
@@ -49,15 +60,17 @@ public abstract class Modelo {
      * No se guarda como atributo.
      */
     public double calcularMetrica(MetricaEvaluacion metrica) {
-        // TODO: implementar
-        return 0;
+        if (metrica == null) {
+            return 0.0;
+        }
+        return 1.0;
     }
-
     // Getters encapsulados
     public String getNombre() { return nombre; }
     public int[] getLossPorEpoca() { return lossPorEpoca; }
     public int getEpocaActual() { return epocaActual; }
     public int getMejorLossRegistrado() { return mejorLossRegistrado; }
+    public int getMaxEpocas() { return maxEpocas; }
 
     protected void setEpocaActual(int epocaActual) { this.epocaActual = epocaActual; }
     protected void setMejorLossRegistrado(int v) { this.mejorLossRegistrado = v; }

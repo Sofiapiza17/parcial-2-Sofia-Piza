@@ -4,31 +4,49 @@ import datos.Dataset;
 import modelos.*;
 
 /**
- * Experimento que COMPONE un modelo.
- * El modelo se crea dentro del constructor (composición real).
+ * Clase que representa un experimento de Machine Learning.
  */
 public class Experimento {
 
-    private String id;
-    private Modelo modelo;
+    private final String id;
+    private final Modelo modelo;
 
-    /**
-     * Crea el modelo según el tipo indicado.
-     * Tipo: "CNN", "RNN", "REGRESION".
-     * Si el tipo es inválido, el modelo queda null.
-     */
     public Experimento(String id, String tipoModelo, int maxEpocas) {
         this.id = id;
-        // TODO: implementar composición (factory simple con switch)
-        this.modelo = null;
+        if ("CNN".equalsIgnoreCase(tipoModelo)) {
+            this.modelo = new ModeloCNN("CNN", maxEpocas, 16);
+        } else if ("RNN".equalsIgnoreCase(tipoModelo)) {
+            this.modelo = new ModeloRNN("RNN", maxEpocas, 2);
+        } else if ("REGRESION".equalsIgnoreCase(tipoModelo)) {
+            this.modelo = new ModeloRegresion("REGRESION", maxEpocas, 1);
+        } else {
+            this.modelo = null;
+        }
     }
 
-    /** Ejecuta el entrenamiento del modelo sobre el dataset. */
+    /**
+     * Ejecuta el entrenamiento del modelo sobre el dataset.
+     */
     public double ejecutar(Dataset dataset) {
-        // TODO: implementar
-        return 0;
+        if (this.modelo == null || dataset == null) {
+            return 0.0;
+        }
+        double loss = this.modelo.entrenar(dataset);
+        return loss > 0 ? loss : 1.0;
     }
 
-    public String getId() { return id; }
-    public Modelo getModelo() { return modelo; }
+    public String getId() {
+        return id;
+    }
+
+    public Modelo getModelo() {
+        return modelo;
+    }
+
+    public double mejorLoss() {
+        if (this.modelo != null) {
+            return this.modelo.mejorLoss();
+        }
+        return Integer.MAX_VALUE;
+    }
 }

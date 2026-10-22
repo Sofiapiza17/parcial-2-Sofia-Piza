@@ -14,18 +14,16 @@ public class ModeloCNN extends Modelo {
         this.numFiltros = numFiltros;
     }
 
-    /**
-     * TODO estudiante:
-     * Simula el entrenamiento registrando hasta maxEpocas valores decrecientes
-     * de loss. Retorna el mejor (menor) loss alcanzado.
-     * Puedes usar un loss inicial proporcional a numFiltros y decrementarlo
-     * en cada época.
-     */
     @Override
     public double entrenar(Dataset dataset) {
-        // TODO: implementar
-        return 0;
+        int lossInicial = numFiltros * 10;
+        for (int i = 0; i < getMaxEpocas(); i++) {
+            registrarEpoca(lossInicial - i);
+        }
+        return mejorLoss();
     }
 
-    public int getNumFiltros() { return numFiltros; }
+    public int getNumFiltros() {
+        return numFiltros;
+    }
 }

@@ -16,9 +16,10 @@ public class ModeloRegresion extends Modelo {
 
     @Override
     public double entrenar(Dataset dataset) {
-        // TODO: implementar
-        return 0;
+        for (int i = 0; i < getMaxEpocas(); i++) {
+            registrarEpoca(5 - i);
+        }
+        return mejorLoss();
     }
-
     public int getGrado() { return grado; }
 }
